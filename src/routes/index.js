@@ -3,7 +3,7 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Mendeleev API' });
+  res.send('Mendeleev express API');
 });
 
 module.exports = router;
