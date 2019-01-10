@@ -5,9 +5,12 @@ import logger from 'morgan'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
 import bodyParser from 'body-parser';
+import mongoose from 'mongoose'
 import config from './config.json';
+import indexRouter from './routes/index'
+import dotenv from 'dotenv'
 
-var indexRouter = require('./routes/index');
+dotenv.config()
 
 let app = express();
 app.server = http.createServer(app);
@@ -22,7 +25,7 @@ app.use(cors({
 	exposedHeaders: config.corsHeaders
 }));
 app.use(bodyParser.json({
-	limit : process.env.BODY_LIMIT || config.bodyLimit
+	limit : `${process.env.BODY_LIMIT || config.bodyLimit}kb`
 }));
 
 app.use('/', indexRouter);
@@ -46,6 +49,8 @@ app.use(function(err, req, res, next) {
     error: err
   });
 });
+
+mongoose.connect(`mongodb://${process.env.DB_HOST}/${process.env.DB_NAME}`, { useNewUrlParser: true });
 
 app.server.listen(port);
 app.server.on('error', onError);
