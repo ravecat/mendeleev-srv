@@ -5,10 +5,11 @@ import logger from 'morgan'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
 import bodyParser from 'body-parser';
-import mongoose from 'mongoose'
-import config from './config.json';
-import indexRouter from './routes/index'
 import dotenv from 'dotenv'
+import config from './config';
+import initDb from './db'
+import indexRouter from './routes/index'
+import api from './api';
 
 dotenv.config()
 
@@ -28,7 +29,15 @@ app.use(bodyParser.json({
 	limit : `${process.env.BODY_LIMIT || config.bodyLimit}kb`
 }));
 
-app.use('/', indexRouter);
+initDb(() => {
+  app.use('/api', api({ config }));
+
+  app.server.listen(port);
+  app.server.on('error', onError);
+  app.server.on('listening', function() {
+    console.log('Server is ready')
+  });
+})
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -41,21 +50,13 @@ app.use(function(err, req, res, next) {
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  // render the error page
+  // send the error data
   res.status(err.status || config.errorStatus);
   res.send({
     message: err.message,
     status: err.status,
     error: err
   });
-});
-
-mongoose.connect(`mongodb://${process.env.DB_HOST}/${process.env.DB_NAME}`, { useNewUrlParser: true });
-
-app.server.listen(port);
-app.server.on('error', onError);
-app.server.on('listening', function() {
-  console.log('Server is ready')
 });
 
 function normalizePort(val) {
