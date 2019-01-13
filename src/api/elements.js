@@ -1,18 +1,10 @@
 import { Router } from 'express';
 import models from '../models';
+import resources from '../services/resources'
 
-export default ({ Elements }, { config }) => {
-	const router = Router();
-
-	router.get('/', (req, res, next) => {
-    try {
-      Elements.find(function (err, data) {
-        res.send(data);
-      })
-    } catch(err) {
-      next(err)
-    }
-	});
-
-	return router;
-}
+export default ({ Elements }) => resources({
+  model: Elements,
+  read(req, res, next) {
+    res.send(res.data)
+  }
+})

@@ -2,10 +2,10 @@ import { Router } from 'express';
 import elements from './elements';
 import models from '../models'
 
-export default ({ config }) => {
+export default () => {
 	const router = Router();
 
-	router.use('/elements', elements(models, { config }));
+	router.use('/elements', elements(models));
 	router.get('/', (req, res) => {
 		res.send({
 			message: 'Mendeleev API',

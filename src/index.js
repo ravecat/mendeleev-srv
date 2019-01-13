@@ -16,7 +16,7 @@ dotenv.config()
 let app = express();
 app.server = http.createServer(app);
 
-var port = normalizePort(process.env.PORT || config.port);
+const port = normalizePort(process.env.PORT || config.port);
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -30,7 +30,7 @@ app.use(bodyParser.json({
 }));
 
 initDb(() => {
-  app.use('/api', api({ config }));
+  app.use('/api', api());
 
   app.server.listen(port);
   app.server.on('error', onError);
