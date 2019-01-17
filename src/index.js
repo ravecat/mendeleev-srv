@@ -8,7 +8,6 @@ import bodyParser from 'body-parser';
 import dotenv from 'dotenv'
 import config from './config';
 import initDb from './db'
-import indexRouter from './routes/index'
 import api from './api';
 
 dotenv.config()

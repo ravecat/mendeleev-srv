@@ -8,7 +8,7 @@
     "build": "babel src -s -D -d dist",
     "start": "node dist",
     "dev": "nodemon -w src --exec \"babel-node src \"",
-    "test": "eslint src"
+    "test": "eslint --fix src"
   },
   "dependencies": {
     "body-parser": "^1.18.3",
