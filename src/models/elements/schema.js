@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+import mongoose from 'mongoose';
 
 export default new mongoose.Schema({
   name: String,
@@ -18,4 +18,4 @@ export default new mongoose.Schema({
   },
   atomic_number: Number,
   symbol: String
-})
+});
