@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import mongoCallback from './mongoCallback'
-import expressCallback from './expressCallback'
+import mongoCallback from './mongoCallback';
+import expressCallback from './expressCallback';
 
 const mapList = { create:'post', read:'get' };
 // TODO Use that for entity
@@ -12,7 +12,7 @@ export default ({ mergeParams = false, caseSensitive = false, strict = false, id
     mergeParams,
     caseSensitive,
     strict
-  })
+  });
 
   if (rest.middleware) router.use(rest.middleware);
 
@@ -22,17 +22,17 @@ export default ({ mergeParams = false, caseSensitive = false, strict = false, id
   });
   
   Object.keys(mapList).forEach(key => {
-    const isCustomCb = typeof rest[key] === 'function'
-    const fn = isCustomCb ? rest[key] : expressCallback[key]
+    const isCustomCb = typeof rest[key] === 'function';
+    const fn = isCustomCb ? rest[key] : expressCallback[key];
     
     router[mapList[key]]('/', (req, res, next) => {
       try {
-        model[mapMongo[key]](mongoCallback[key](req, res, next, fn))
+        model[mapMongo[key]](mongoCallback[key](req, res, next, fn));
       } catch(err) {
-        next(err)
+        next(err);
       }
     });
   });
 
-  return router
-}
+  return router;
+};
