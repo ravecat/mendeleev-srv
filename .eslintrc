@@ -22,6 +22,7 @@
   },
   "rules": {
     "no-console": 0,
+    "no-multiple-empty-lines": [2, { "max": 2, "maxEOF": 0 }],
     "eol-last": [2, "always"],
     "no-unused-vars": [2, {
       "vars": "all",
