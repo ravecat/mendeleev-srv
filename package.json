@@ -6,13 +6,12 @@
   "scripts": {
     "prestart": "npm run -s build",
     "build": "babel src -s -D -d dist",
-    "start": "node dist",
-    "dev": "nodemon -w src --exec \"babel-node src \"",
+    "start": "NODE_ENV=prod node dist",
+    "dev": "NODE_ENV=dev nodemon -w src --exec \"babel-node src\"",
     "lint": "eslint 'src/**/*.js'",
     "lint:fix": "yarn lint --fix",
-    "test:jest": "jest --passWithNoTests",
-    "test:watch": "yarn test:jest --watch --coverage",
-    "test": "yarn lint && yarn test:jest"
+    "test": "NODE_ENV=test jest --passWithNoTests",
+    "test:watch": "yarn test --watch --coverage"
   },
   "dependencies": {
     "body-parser": "^1.18.3",
@@ -46,7 +45,7 @@
   "lint-staged": {
     "*.js": [
       "yarn lint:fix",
-      "yarn test:jest",
+      "yarn test",
       "git add"
     ]
   }

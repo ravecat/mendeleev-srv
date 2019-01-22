@@ -1,13 +1,9 @@
 import http from 'http';
-import dotenv from 'dotenv';
 import config from './config';
 import app from './app';
 import initDb from './db';
 
-dotenv.config();
-console.log(process.env.NODE_ENV, process.env.DB_NAME);
-
-const port = process.env.PORT || config.port;
+const port = config.port;
 
 app.server = http.createServer(app);
 
@@ -15,7 +11,7 @@ initDb(() => {
   app.server.listen(port);
   app.server.on('error', onError);
   app.server.on('listening', function() {
-    console.log(`Server is ready on port ${port}`);
+    console.warn(`Server is ready on port ${port}`);
   });
 });
 
