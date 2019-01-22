@@ -21,7 +21,7 @@
     "describe": true
   },
   "rules": {
-    "no-console": 0,
+    "no-console": [2, { "allow": ["warn", "error"] }],
     "semi": [2, "always"],
     "quotes": [2, "single", { "avoidEscape": true }],
     "no-multiple-empty-lines": [2, { "max": 2, "maxEOF": 0 }],
