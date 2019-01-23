@@ -8,7 +8,8 @@ export default callback => {
 
 	mongoose.connection.on('error', err => {
 		console.error(err);
-		console.warn('MongoDB connection error. Please make sure MongoDB is running correctly.');
+		console.warn('\nMongoDB connection error. Please make sure MongoDB is running correctly\n');
+		
 		process.exit();
 	});
 
