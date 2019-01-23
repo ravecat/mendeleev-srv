@@ -11,7 +11,7 @@ initDb(() => {
   app.server.listen(port);
   app.server.on('error', onError);
   app.server.on('listening', function() {
-    console.warn(`Server is ready on port ${port}`);
+    console.warn(`\nServer is ready on port ${port}\n`);
   });
 });
 
