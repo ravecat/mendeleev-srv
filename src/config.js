@@ -5,7 +5,7 @@ if (!fs.existsSync(path)) {
 	console.warn(`\nFile ${path} doesn't exists or NODE_ENV not setted, app uses default environment variables\n`);
 }
 
-require('dotenv').config({ path: `.env.${process.env.NODE_ENV || 'dev'}` });
+require('dotenv').config({ path: `${path || 'dev'}` });
 
 export default {
 	port: process.env.PORT || 3001,
