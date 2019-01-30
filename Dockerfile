@@ -3,4 +3,4 @@ WORKDIR /app
 COPY . /app
 RUN yarn
 EXPOSE 3001
-CMD ["yarn", "app:dev"]
+CMD ["yarn", "start"]
