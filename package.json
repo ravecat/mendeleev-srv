@@ -1,5 +1,5 @@
 {
-  "name": "mendeleev-api",
+  "name": "mendeleev_api",
   "description": "Mendeleev API",
   "version": "0.0.1",
   "private": true,
@@ -7,7 +7,8 @@
     "prestart": "npm run -s build",
     "build": "babel src -s -D -d dist",
     "start": "NODE_ENV=prod node dist",
-    "dev": "NODE_ENV=dev nodemon -w src --exec \"babel-node src\"",
+    "app:dev": "NODE_ENV=dev nodemon -w src --exec \"babel-node src\"",
+    "dev": "docker-compose -f docker-compose.dev.yml up",
     "lint": "eslint 'src/**/*.js'",
     "lint:fix": "yarn lint --fix",
     "test": "NODE_ENV=test jest --passWithNoTests",
