@@ -11,6 +11,7 @@ export default {
 	port: process.env.PORT || 3001,
 	databaseName: process.env.DB_NAME,
 	databaseHost: process.env.DB_HOST,
+	databasePort: process.env.DB_PORT || 27017,
 	errorStatus: process.env.ERROR_STATUS || 500,
 	bodyLimit: process.env.BODY_LIMIT || 100,
 	corsHeaders: ['Link']
