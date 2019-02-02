@@ -1,11 +1,11 @@
 import { Router } from 'express';
 import elements from './elements';
-import models from '../models';
+import { Elements } from '../models';
 
 export default () => {
 	const router = Router();
-
-	router.use('/elements', elements(models));
+	
+	router.use('/elements', elements(Elements));
 	router.get('/', (req, res) => {
 		res.status(200).send({
 			message: 'Mendeleev API',

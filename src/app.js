@@ -29,7 +29,6 @@ app.use(function(req, res, next) {
 // error handler
 app.use(function(err, req, res, next) {
   res.status(err.status || config.errorStatus).send({
-    message: err.message,
     status: err.status,
     error: err
   });

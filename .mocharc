@@ -1,0 +1,2 @@
+--recursive src/**/?(*.)test.js
+--require babel-core/register

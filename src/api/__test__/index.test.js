@@ -1,24 +1,49 @@
-import request from 'supertest';
+import mongoose from 'mongoose';
+import chai from 'chai';
+import chaiHttp from 'chai-http';
+import config from '../../config';
 import app from '../../app';
 
-describe('API /api', function () {
-  it('GET /', function (done) {
-    request(app)
-      .get('/api')
-      .set('Accept', 'application/json')
-      .expect('Content-Type', /json/)
-      .expect(200, done);
+chai.use(chaiHttp);
+chai.should();
+
+describe('API/api', function () {
+  before(function (done) {
+    const { databaseName, databaseHost, databasePort } = config;
+
+    mongoose.connect(`mongodb://${databaseHost}:${databasePort}/${databaseName}`, { useNewUrlParser: true });
+
+    mongoose.connection.on('error', console.error.bind(console, 'connection error'));
+    mongoose.connection.once('open', function() {
+      console.warn('\nConnection to mongo successfully established\n');
+    });
+
+    done();
   });
 
-  it('Return 404 for non-existing route', function (done) {
-    request(app)
-      .get('/non-existing')
-      .set('Accept', 'application/json')
-      .expect('Content-Type', /json/)
-      .expect(404)
-      .end(err => {
-        if (err) return done(err);
+  it('GET/ Root path', function (done) {
+    chai.request(app)
+      .get('/api')
+      .end((err, res) => {
+        res.should.have.status(200);
+        res.body.should.be.a('object');
+        res.body.should.have.property('data');
         done();
       });
+  });
+
+  it('Non-existing path', function (done) {
+    chai.request(app)
+      .get('/path_not_exist')
+      .end((err, res) => {
+        res.should.have.status(404);
+        done();
+      });
+  });
+
+  after(function(done){
+    mongoose.connection.db.dropDatabase(function(){
+      mongoose.connection.close(done);
+    });
   });
 });

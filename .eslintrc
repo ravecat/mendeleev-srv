@@ -18,7 +18,9 @@
     "it": true,
     "jest": true,
     "expect": true,
-    "describe": true
+    "describe": true,
+    "before": true,
+    "after": true
   },
   "rules": {
     "no-console": [2, { "allow": ["warn", "error"] }],
