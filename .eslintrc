@@ -1,4 +1,5 @@
 {
+  "parser": "babel-eslint",
   "extends": [
     "eslint:recommended",
     "plugin:jest/recommended"
@@ -6,9 +7,6 @@
   "parserOptions": {
     "ecmaVersion": 7,
     "sourceType": "module",
-    "ecmaFeatures": {
-      "experimentalObjectRestSpread": true
-    }
   },
   "env": {
     "node": true,
