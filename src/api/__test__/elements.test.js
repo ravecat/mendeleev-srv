@@ -4,6 +4,7 @@ import chaiHttp from 'chai-http';
 import config from '../../config';
 import app from '../../app';
 import { Elements } from '../../models';
+import element from './element.json';
 
 chai.use(chaiHttp);
 chai.should();
@@ -40,13 +41,6 @@ describe('API/api/elements', function () {
   });
 
   it('POST/api/elements Create element successfully', (done) => {
-    const element = {
-      name: 'Hydrogen',
-      symbol: 'H',
-      atomic_weigth: 1,
-      atomic_number: 1
-    };
-
     chai.request(app)
       .post('/api/elements')
       .send(element)
@@ -57,6 +51,21 @@ describe('API/api/elements', function () {
         res.body.should.have.property('symbol');
         done();
       });
+  });
+
+  it('GET/api/elements/:id Get element by atomic number', (done) => {
+    Elements.create(element, (err, data) => {
+      chai.request(app)
+        .get(`/api/elements/${data._id}`)
+        .end((err, res) => {
+          res.should.have.status(200);
+          res.body.should.be.a('object');
+          res.body.should.have.property('name');
+          res.body.should.have.property('symbol');
+          res.body.should.have.property('atomic_number').eql(element.atomic_number);
+          done();
+        });
+    });
   });
 
   after(function(done){

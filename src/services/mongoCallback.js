@@ -1,4 +1,4 @@
-const mapMongo = { create:'create', read:'find', update:'findByIdAndUpdate', delete:'findByIdAndRemove' };
+const mapMongo = { create:'create', read:'find', readEntity:'findOne', update:'findByIdAndUpdate', delete:'findByIdAndRemove' };
 
 export default {
   read: function({ req, res, next, callback, model, key }) {
@@ -12,6 +12,15 @@ export default {
   },
   create: function({ req, res, next, callback, model, key }) {
     return model[mapMongo[key]](req.body, function(err, data) {
+      if (err) return res.status(500).send(err);
+      
+      res.data = data;
+
+      callback(req, res, next);
+    });
+  },
+  readEntity: function({ req, res, next, callback, model, key }) {
+    return model[mapMongo[key]]({ _id: req.params.id }, function(err, data) {
       if (err) return res.status(500).send(err);
       
       res.data = data;

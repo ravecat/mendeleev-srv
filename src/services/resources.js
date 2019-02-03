@@ -1,12 +1,11 @@
 import { Router } from 'express';
 import mongoCallback from './mongoCallback';
 import expressCallback from './expressCallback';
+import entityRouter from './entityRouter';
 
 const mapList = { create:'post', read:'get' };
-// TODO Use that for entity
-// const mapEntity = { readEntity:'get', update:'put', delete:'delete' };
 
-export default ({ mergeParams = false, caseSensitive = false, strict = false, id, model, ...rest }) => {
+export default ({ mergeParams = false, caseSensitive = false, strict = false, model, ...rest }) => {
   const router = Router({
     mergeParams,
     caseSensitive,
@@ -15,14 +14,10 @@ export default ({ mergeParams = false, caseSensitive = false, strict = false, id
 
   if (rest.middleware) router.use(rest.middleware);
 
-  router.use('/:id([a-zA-Z0-9]+)', function(req, res, next) {
-    // TODO Add routes for entity
-    next();
-  });
+  router.use('/:id([a-zA-Z0-9]+)', entityRouter(model, ...rest));
   
   Object.keys(mapList).forEach(key => {
-    const isCustomCb = typeof rest[key] === 'function';
-    const callback = isCustomCb ? rest[key] : expressCallback[key];
+    const callback = typeof rest[key] === 'function' ? rest[key] : expressCallback[key];
     
     router[mapList[key]]('/', (req, res, next) => {
       try {

@@ -4,5 +4,8 @@ export default {
   },
   create: function(req, res, next) {
     res.status(200).send(res.data);
+  },
+  readEntity: function(req, res, next) {
+    res.status(200).send(res.data);
   }
 };
