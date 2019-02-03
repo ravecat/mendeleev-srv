@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import mongoCallback from './mongoCallback';
-import expressCallback from './expressCallback';
+import mongoMethod from '../mongoMethod';
+import expressCallback from '../expressCallback';
 
 const mapEntity = { readEntity:'get', update:'put', delete:'delete' };
 
@@ -14,7 +14,7 @@ export default (model, ...rest) => {
     
     router[mapEntity[key]]('/', (req, res, next) => {
       try {
-        mongoCallback[key]({ req, res, next, callback, model, key });
+        mongoMethod[key]({ req, res, next, callback, model, key });
       } catch(err) {
         next(err);
       }
