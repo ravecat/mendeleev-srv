@@ -20,6 +20,10 @@ app.use(bodyParser.json({
 	limit : `${process.env.BODY_LIMIT || config.bodyLimit}kb`
 }));
 app.use('/api', api());
+// app.use('/api', function (req, res) {
+//   console.log(req.body)
+//   res.send(200, req.body);
+// });
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

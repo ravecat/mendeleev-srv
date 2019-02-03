@@ -68,6 +68,22 @@ describe('API/api/elements', function () {
     });
   });
 
+  it('PUT/api/elements/:id Update element', (done) => {
+    Elements.create(element, (err, data) => {
+      chai.request(app)
+        .put(`/api/elements/${data._id}`)
+        .send({ ...data._doc, name: 'Updated' })
+        .end((err, res) => {
+          res.should.have.status(200);
+          res.body.should.be.a('object');
+          res.body.should.have.property('name');
+          res.body.should.have.property('symbol');
+          res.body.should.have.property('name').eql('Updated');
+          done();
+        });
+    });
+  });
+
   after(function(done){
     mongoose.connection.db.dropDatabase(function(){
       mongoose.connection.close(done);
