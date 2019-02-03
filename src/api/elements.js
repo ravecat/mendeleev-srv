@@ -1,5 +1,5 @@
-import resources from '../services/resources';
+import mongoMiddleware from '../services/mongo_express_middleware';
 
-export default Elements => resources({
+export default Elements => mongoMiddleware({
   model: Elements
 });
