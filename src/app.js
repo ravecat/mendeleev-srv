@@ -7,23 +7,19 @@ import bodyParser from 'body-parser';
 import config from './config';
 import api from './api';
 
+const { corsHeaders: exposedHeaders, bodyLimit, errorStatus } = config;
+
 const app = express();
 
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(cors({
-	exposedHeaders: config.corsHeaders
-}));
+app.use(cors({ exposedHeaders }));
 app.use(bodyParser.json({
-	limit : `${process.env.BODY_LIMIT || config.bodyLimit}kb`
+	limit : `${process.env.BODY_LIMIT || bodyLimit}kb`
 }));
 app.use('/api', api());
-// app.use('/api', function (req, res) {
-//   console.log(req.body)
-//   res.send(200, req.body);
-// });
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -32,7 +28,7 @@ app.use(function(req, res, next) {
 
 // error handler
 app.use(function(err, req, res, next) {
-  res.status(err.status || config.errorStatus).send({
+  res.status(err.status || errorStatus).send({
     status: err.status,
     error: err
   });

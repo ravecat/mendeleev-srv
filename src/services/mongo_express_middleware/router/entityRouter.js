@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import mongoMethod from '../mongoMethod';
-import expressCallback from '../expressCallback';
+import defaultCallback from './defaultCallback';
 
 const mapEntity = { readEntity:'get', update:'put', delete:'delete' };
 
@@ -10,7 +10,7 @@ export default (model, ...rest) => {
   });
 
   Object.keys(mapEntity).forEach(key => {
-    const callback = typeof rest[key] === 'function' ? rest[key] : expressCallback[key];
+    const callback = typeof rest[key] === 'function' ? rest[key] : defaultCallback;   
     
     router[mapEntity[key]]('/', (req, res, next) => {
       try {
