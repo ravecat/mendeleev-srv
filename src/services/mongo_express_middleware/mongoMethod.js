@@ -34,5 +34,16 @@ export default {
 
       callback(req, res, next);
     });
+  },
+  delete: function({ req, res, next, callback, model, key }) {
+    return model.findOneAndDelete({ _id: req.params.id }, null, function(err, data) {
+      if (err) return res.status(500).send(err);
+
+      res.data = {
+        id: data._id
+      };
+
+      callback(req, res, next);
+    });
   }
 };
