@@ -84,6 +84,19 @@ describe('API/api/elements', function () {
     });
   });
 
+  it('DELETE/api/elements/:id Delete element', (done) => {
+    Elements.create(element, (err, data) => {
+      chai.request(app)
+        .delete(`/api/elements/${data._id}`)
+        .end((err, res) => {
+          res.should.have.status(200);
+          res.body.should.be.a('object');
+          res.body.should.have.property('id').eql(`${data._id}`);
+          done();
+        });
+    });
+  });
+
   after(function(done){
     mongoose.connection.db.dropDatabase(function(){
       mongoose.connection.close(done);
