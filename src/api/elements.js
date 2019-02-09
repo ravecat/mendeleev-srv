@@ -1,4 +1,4 @@
-import { mongoMiddleware } from '../services/mongo-express-middleware';
+import { mongoMiddleware } from 'mongo-express-middleware';
 
 export default Elements => mongoMiddleware({
   model: Elements

@@ -3315,6 +3315,11 @@ mocha@^5.2.0:
     mkdirp "0.5.1"
     supports-color "5.4.0"
 
+mongo-express-middleware@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/mongo-express-middleware/-/mongo-express-middleware-1.0.0.tgz#ff044a443a2ad3f0869fca2aede0fe02009a4b54"
+  integrity sha512-agsGpKcQ2Z27cIxmGrvz1+sYSNBnqj1yjAz8nm+sqIOJuTgSn0yQDixAcSuEMeUe1u1+VfWTXQ5Oih37STZ81g==
+
 mongodb-core@3.1.9:
   version "3.1.9"
   resolved "https://registry.yarnpkg.com/mongodb-core/-/mongodb-core-3.1.9.tgz#c31ee407bf932b0149eaed775c17ee09974e4ca3"
