@@ -1,2 +1,2 @@
---recursive src/**/?(*.)test.js
---require babel-core/register
+--recursive ./{,!(node_modules)/**/}*.test.js
+--compilers @babel/register
