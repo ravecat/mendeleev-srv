@@ -1,4 +1,3 @@
-FROM mongo
+FROM mongo:latest
 COPY elements.json /elements.json
-# TODO Use temporary elements.json for mock data
-CMD mongoimport --db mendeleev --collection elements --drop --file /elements.json --jsonArray
+CMD mongoimport --port ${DB_PORT} --db ${DB_NAME} --collection elements --drop --file /elements.json --jsonArray
