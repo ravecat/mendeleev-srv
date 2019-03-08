@@ -1,0 +1,18 @@
+version: "3.3"
+
+services:
+  mongo:
+    container_name: mongo_dev
+    image: mongo:latest
+    # In future probably can set 27019 port as ${DB_PORT} (from .env.dev file) after resolve proposal below
+    # https://github.com/docker/compose/issues/3435
+    ports:
+      - 27019:27017
+
+  mongo_seed:
+    container_name: mongo_seed
+    env_file: ../../.env.dev
+    network_mode: host
+    build: .
+    depends_on:
+      - mongo
