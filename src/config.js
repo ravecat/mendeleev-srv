@@ -9,7 +9,7 @@ require('dotenv').config({ path: `${path || 'dev'}` });
 
 export default {
 	port: process.env.PORT || 3001,
-	databaseName: process.env.DB_NAME,
+	databaseName: process.env.DB_NAME || 'mendeleev',
 	databaseHost: process.env.DB_HOST || 'localhost',
 	databasePort: process.env.DB_PORT || 27017,
 	errorStatus: process.env.ERROR_STATUS || 500,
