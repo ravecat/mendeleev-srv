@@ -13,7 +13,7 @@
     "lint": "eslint 'src/**/*.js'",
     "lint:fix": "yarn lint --fix",
     "test:app": "NODE_ENV=test mocha --opts .mocharc",
-    "test:docker": "docker-compose -f docker/test/docker-compose.test.yml up -d",
+    "test:docker": "docker-compose -f docker/test/docker-compose.yml up -d",
     "test": "yarn test:docker && yarn test:app",
     "test:watch": "yarn test --watch"
   },
