@@ -1,26 +1,13 @@
-import mongoose from 'mongoose';
+process.env.NODE_ENV = 'test';
+
 import chai from 'chai';
 import chaiHttp from 'chai-http';
-import config from '../../config';
-import app from '../../app';
+import app from '../../index';
 
 chai.use(chaiHttp);
 chai.should();
 
 describe('API/api', function () {
-  before(function (done) {
-    const { databaseName, databaseHost, databasePort } = config;
-
-    mongoose.connect(`mongodb://${databaseHost}:${databasePort}/${databaseName}`, { useNewUrlParser: true });
-
-    mongoose.connection.on('error', console.error.bind(console, 'connection error'));
-    mongoose.connection.once('open', function() {
-      console.warn('\nConnection to mongo successfully established\n');
-    });
-
-    done();
-  });
-
   it('GET/ Root path', function (done) {
     chai.request(app)
       .get('/api')
@@ -39,11 +26,5 @@ describe('API/api', function () {
         res.should.have.status(404);
         done();
       });
-  });
-
-  after(function(done){
-    mongoose.connection.db.dropDatabase(function(){
-      mongoose.connection.close(done);
-    });
   });
 });

@@ -1,8 +1,8 @@
-import mongoose from 'mongoose';
+process.env.NODE_ENV = 'test';
+
 import chai from 'chai';
 import chaiHttp from 'chai-http';
-import config from '../../config';
-import app from '../../app';
+import app from '../../index';
 import { Elements } from '../../models';
 import element from './element.json';
 
@@ -10,25 +10,11 @@ chai.use(chaiHttp);
 chai.should();
 
 describe('API/api/elements', function () {
-  before(function (done) {
-    const { databaseName, databaseHost, databasePort } = config;
-
-    mongoose.connect(`mongodb://${databaseHost}:${databasePort}/${databaseName}`, { useNewUrlParser: true });
-
-    mongoose.connection.on('error', console.error.bind(console, 'connection error'));
-    mongoose.connection.once('open', function() {
-      console.warn('\nConnection to mongo successfully established\n');
-    });
-
-    done();
-  });
-
   beforeEach(function (done) {
     Elements.deleteMany({}, err => { 
       done();           
     });   
   });
-
   it('GET/api/elements Get element list', function (done) {
     chai.request(app)
       .get('/api/elements')
@@ -94,12 +80,6 @@ describe('API/api/elements', function () {
           res.body.should.have.property('id').eql(`${data._id}`);
           done();
         });
-    });
-  });
-
-  after(function(done){
-    mongoose.connection.db.dropDatabase(function(){
-      mongoose.connection.close(done);
     });
   });
 });
