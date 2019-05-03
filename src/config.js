@@ -1,11 +1,25 @@
 const fs = require('fs');
-const path = `.env.${process.env.NODE_ENV}`;
+const NODE_ENV = process.env.NODE_ENV;
 
-if (!fs.existsSync(path)) {
-	console.warn(`\nFile ${path} doesn't exists or NODE_ENV not setted, app uses default environment variables\n`);
+const dotenvFiles = [
+  `.env.${NODE_ENV}.local`,
+  `.env.${NODE_ENV}`,
+  '.env',
+];
+
+if (!dotenvFiles.some(fs.existsSync)) {
+	console.warn('\nAny environment variables files don\'t exist, app uses default configuration\n');
 }
 
-require('dotenv').config({ path: `${path || 'dev'}` });
+dotenvFiles.forEach(dotenvFile => {
+  if (fs.existsSync(dotenvFile)) {
+    require('dotenv-expand')(
+      require('dotenv').config({
+        path: dotenvFile,
+      })
+    );
+  }
+});
 
 export default {
 	port: process.env.PORT || 3001,

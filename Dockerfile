@@ -1,6 +1,8 @@
 FROM node:10.13-alpine
 WORKDIR /app
 COPY . /app
-RUN yarn
+
+RUN yarn && ./node_modules/.bin/babel src -s -D -d dist
+
 EXPOSE 3001
 CMD ["yarn", "start"]

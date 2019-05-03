@@ -1,8 +1,15 @@
 version: "3.5"
 
 services:
-  mongo:
+  mongo_test:
     container_name: mongo_test
     image: mongo
     ports:
       - 27018:27017
+    networks:
+      - test_network
+
+networks:
+  test_network:
+    driver: bridge
+    name: test_network
