@@ -3,21 +3,25 @@ version: "3.5"
 services:
   mongo:
     container_name: mongo
+    restart: always
     image: mongo:latest
     ports:
       - 27017:27017
     networks:
-      - dev_network
+      - prod
 
-  mongo_seed:
-    container_name: mongo_seed
+  app:
+    container_name: app
+    restart: always
     build: .
-    networks:
-      - dev_network
+    ports:
+      - 3001:3001
     depends_on:
       - mongo
+    networks:
+      - prod
 
 networks:
-  dev_network:
+  prod:
+    name: prod
     driver: bridge
-    name: dev_network
