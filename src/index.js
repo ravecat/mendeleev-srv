@@ -10,7 +10,7 @@ import api from './api';
 
 const app = express();
 
-const { port, databaseName, databaseHost, databasePort, corsHeaders: exposedHeaders, bodyLimit, errorStatus } = config;
+const { mode, port, databaseName, databaseHost, databasePort, corsHeaders: exposedHeaders, bodyLimit, errorStatus } = config;
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -42,10 +42,10 @@ mongoose.connection.on('error', err => {
   process.exit();
 });
 mongoose.connection.on('open', function() {
-  console.warn('Connection to mongo successfully established\n');
+  console.warn(`Connection to ${databaseHost}:${databasePort} successfully established\n`);
 
   app.listen(port, function() {
-    console.warn(`App is ready on port ${port}\n`);
+    console.warn(`App is ready on port ${port} in ${mode} mode\n`);
     console.warn('Press CTRL-C to stop\n');
   });
 });

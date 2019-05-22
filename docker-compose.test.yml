@@ -1,0 +1,26 @@
+version: "3.5"
+
+services:
+  mongo_test:
+    container_name: mongo_test
+    image: mongo:latest
+    networks:
+      - test
+
+  app_test:
+    container_name: app_test
+    environment:
+      - NODE_ENV=test
+      - DB_HOST=mongo_test
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    depends_on:
+      - mongo_test
+    networks:
+      - test
+
+networks:
+  test:
+    driver: bridge
+    name: test

@@ -2,14 +2,16 @@ version: "3.5"
 
 services:
   mongo:
-    container_name: mongo
     image: mongo:latest
+    container_name: mongo
     networks:
       - prod
 
   app:
     container_name: app
+    build: .
     environment:
+      - NODE_ENV=production
       - DB_HOST=mongo
       - PORT=3000
     restart: always
