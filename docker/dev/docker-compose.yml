@@ -1,23 +1,23 @@
 version: "3.5"
 
 services:
-  mongo:
-    container_name: mongo
+  mongo_dev:
+    container_name: mongo_dev
     image: mongo:latest
     ports:
       - 27017:27017
     networks:
-      - dev_network
+      - dev
 
   mongo_seed:
     container_name: mongo_seed
     build: .
     networks:
-      - dev_network
+      - dev
     depends_on:
-      - mongo
+      - mongo_dev
 
 networks:
-  dev_network:
+  dev:
     driver: bridge
-    name: dev_network
+    name: dev
