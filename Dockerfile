@@ -4,5 +4,5 @@ COPY . /app
 
 RUN yarn && ./node_modules/.bin/babel src -s -D -d dist
 
-EXPOSE 3001
-CMD ["yarn", "start"]
+EXPOSE 3000
+CMD ["node", "dist"]

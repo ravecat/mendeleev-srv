@@ -7,9 +7,7 @@
     "dev:app": "nodemon -w src --exec \"babel-node src\"",
     "dev:docker": "docker-compose -f docker/dev/docker-compose.yml up -d",
     "dev": "yarn dev:docker && yarn dev:app",
-    "test:app": "mocha --opts .mocharc",
-    "test:docker": "docker-compose -f docker/test/docker-compose.yml up -d",
-    "test": "yarn test:docker && yarn test:app",
+    "test": "docker-compose -f docker/test/docker-compose.yml up -d",
     "lint": "eslint 'src/**/*.js'",
     "lint:fix": "yarn lint --fix"
   },
