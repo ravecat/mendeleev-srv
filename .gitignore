@@ -8,6 +8,7 @@
 /build
 /dist
 .rpt2_cache
+docker-compose.override.yml
 
 # misc
 .DS_Store

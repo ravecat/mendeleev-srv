@@ -1,5 +1,5 @@
 const fs = require('fs');
-const NODE_ENV = process.env.NODE_ENV;
+const NODE_ENV = process.env.NODE_ENV || 'dev';
 
 const dotenvFiles = [
   `.env.${NODE_ENV}.local`,
@@ -22,6 +22,7 @@ dotenvFiles.forEach(dotenvFile => {
 });
 
 export default {
+	mode: NODE_ENV,
 	port: process.env.PORT || 3001,
 	databaseName: process.env.DB_NAME || 'mendeleev',
 	databaseHost: process.env.DB_HOST || 'localhost',
