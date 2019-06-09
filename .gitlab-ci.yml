@@ -1,0 +1,13 @@
+stages:
+  - test
+
+test:lint:
+  stage: test
+  tags:
+    - docker
+  cache:
+    paths:
+    - node_modules/
+  script:
+    - yarn
+    - yarn lint
