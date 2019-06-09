@@ -2,28 +2,30 @@ version: "3.5"
 
 services:
   mongo:
+    container_name: ${DB_HOST}
     image: mongo:latest
-    container_name: mongo
     networks:
-      - prod
+      - production
 
   app:
-    container_name: app
-    build: .
+    container_name: ${APP_CONTAINER}
+    image: ${IMAGE}
     environment:
-      - NODE_ENV=production
-      - DB_HOST=mongo
-      - PORT=3000
+      - PORT
+      - DB_HOST
+      - DB_NAME
+      - DB_PORT
+      - ERROR_STATUS
+      - BODY_LIMIT
     restart: always
-    build: .
     ports:
-      - 3000:3000
+      - ${PORT}:3000
     depends_on:
-      - mongo
+      - ${DB_HOST}
     networks:
-      - prod
+      - production
 
 networks:
-  prod:
-    name: prod
+  production:
+    name: production
     driver: bridge
