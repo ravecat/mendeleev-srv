@@ -1,13 +1,26 @@
+image: docker:stable
+
+services:
+- mongo:latest
+
 stages:
   - test
 
-test:lint:
+test_app:
+  image: node:10.13-alpine
   stage: test
   tags:
     - docker
   cache:
     paths:
     - node_modules/
+  variables:
+    NODE_ENV: test
+    DB_NAME: mendeleev_test
+    DB_HOST: mongo
+    DB_PORT: 27017
   script:
+    - npm i -g yarn 
     - yarn
     - yarn lint
+    - ./node_modules/.bin/mocha --opts .mocharc

@@ -8,7 +8,7 @@ const dotenvFiles = [
 ];
 
 if (!dotenvFiles.some(fs.existsSync)) {
-	console.warn('\nAny environment variables files don\'t exist, app uses default configuration\n');
+	console.warn('\nAny environment variables files don\'t exist, app uses manually setted parameters or default configuration\n');
 }
 
 dotenvFiles.forEach(dotenvFile => {
