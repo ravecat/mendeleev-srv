@@ -5,8 +5,10 @@ services:
 
 stages:
   - test
+  - build
+  - deploy
 
-test_app:
+test:
   image: node:10.13-alpine
   stage: test
   tags:
@@ -19,8 +21,46 @@ test_app:
     DB_NAME: mendeleev_test
     DB_HOST: mongo
     DB_PORT: 27017
+  dependencies: []
+  artifacts:
+    name: "node_modules_artifacts"
+    paths:
+      - ./node_modules
+    expire_in: 2 weeks
   script:
     - npm i -g yarn 
     - yarn
     - yarn lint
     - ./node_modules/.bin/mocha --opts .mocharc
+
+build:
+  stage: build
+  tags:
+    - docker
+  dependencies:
+    - test
+  only:
+    - develop
+  artifacts:
+    name: "app_artifacts"
+    paths:
+      - ./dist
+    expire_in: 2 weeks
+  script:
+    - ./node_modules/.bin/babel src -s -D -d dist
+
+deploy_develop:
+  image: node:10.13-alpine
+  stage: deploy
+  tags:
+    - docker
+  only:
+    - develop
+  variables:
+    NODE_ENV: production
+    DB_NAME: mendeleev
+    DB_HOST: mongo
+    DB_PORT: 27017
+    PORT: 3002
+  script:
+    - node dist
