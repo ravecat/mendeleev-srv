@@ -1,2 +1,0 @@
-FROM node:10.13-alpine
-CMD yarn && ./node_modules/.bin/nodemon -w src --exec babel-node src

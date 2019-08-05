@@ -8,7 +8,7 @@ cache:
   - node_modules/
 
 variables:
-  IMAGE_NAME: ravecat/mendeleev_api
+  IMAGE: ravecat/mendeleev_api
   APP_CONTAINER: mendeleev_api
   DB_HOST: mongo
 
@@ -37,23 +37,23 @@ build:
     - develop
   script: 
     - echo "$(echo "$REGISTRY_PASSWORD" | base64 -d)" | docker login -u "$(echo "$REGISTRY_USER" | base64 -d)" --password-stdin
-    - docker build -t $IMAGE_NAME:develop .
-    - docker push $IMAGE_NAME:develop
+    - docker build -t $IMAGE .
+    - docker push $IMAGE
     - docker logout
 
-deploy_develop:
+deploy:
   stage: deploy
   tags:
     - docker
   only:
-    - develop
+    - master
   variables:
-    IMAGE: $IMAGE_NAME:develop
     PORT: 3000
   script:
+    - echo "$(echo "$REGISTRY_PASSWORD" | base64 -d)" | docker login -u "$(echo "$REGISTRY_USER" | base64 -d)" --password-stdin
     - apk add py-pip
     - apk add python-dev libffi-dev openssl-dev gcc libc-dev make
     - pip install docker-compose
-    - docker image prune -f
     - docker-compose build --no-cache
     - docker-compose up -d --build
+    - docker logout

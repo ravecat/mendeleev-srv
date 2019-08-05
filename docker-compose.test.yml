@@ -8,13 +8,15 @@ services:
       - test
 
   app_test:
+    image: node:10.13-alpine
+    command: sh -c "yarn && ./node_modules/.bin/mocha --opts .mocharc"
     container_name: app_test
+    volumes:
+      - .:/app
+    working_dir: /app
     environment:
       - NODE_ENV=test
       - DB_HOST=mongo_test
-    build:
-      context: .
-      dockerfile: Dockerfile.test
     depends_on:
       - mongo_test
     networks:

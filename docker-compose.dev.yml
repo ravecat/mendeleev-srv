@@ -19,17 +19,16 @@ services:
       - mongo_dev
   
   app_dev:
+    image: node:10.13-alpine
     container_name: app_dev
+    command: sh -c "yarn && ./node_modules/.bin/nodemon -w src --exec babel-node src"
     environment:
       - DB_HOST=mongo_dev
     volumes:
       - .:/app
     working_dir: /app
-    build:
-      context: .
-      dockerfile: Dockerfile.dev
     ports:
-      - 3001:3001
+      - 3001:3000
     networks:
       - dev
     depends_on:
@@ -37,5 +36,5 @@ services:
 
 networks:
   dev:
-    driver: bridge
     name: dev
+    driver: bridge

@@ -5,27 +5,26 @@ services:
     container_name: ${DB_HOST}
     image: mongo:latest
     networks:
-      - production
+      - mendeleev_api
 
   app:
     container_name: ${APP_CONTAINER}
     image: ${IMAGE}
     environment:
+      - NODE_ENV
       - PORT
       - DB_HOST
       - DB_NAME
       - DB_PORT
-      - ERROR_STATUS
-      - BODY_LIMIT
     restart: always
     ports:
       - ${PORT}:3000
     depends_on:
       - ${DB_HOST}
     networks:
-      - production
+      - mendeleev_api
 
 networks:
-  production:
-    name: production
+  mendeleev_api:
+    name: mendeleev_api
     driver: bridge
