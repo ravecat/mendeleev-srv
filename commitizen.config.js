@@ -25,11 +25,11 @@ module.exports = {
   ],
 
   scopes: [
-    { name: 'components' },
-    { name: 'containers' },
-    { name: 'localization' },
-    { name: 'selectors' },
+    { name: 'routes' },
     { name: 'middlewares' },
+    { name: 'validators' },
+    { name: 'localization' },
+    { name: 'utils' },
     { name: 'scripts' }
   ],
   messages: {
