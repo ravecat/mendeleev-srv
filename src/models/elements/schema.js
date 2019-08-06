@@ -5,17 +5,17 @@ export default new mongoose.Schema({
   classification: {
     group: {
       type: Map,
-      of: String
+      of: String,
     },
     period: {
       type: Map,
-      of: String
+      of: String,
     },
     type: {
       type: Map,
-      of: String
-    }
+      of: String,
+    },
   },
   atomic_number: Number,
-  symbol: String
+  symbol: String,
 });

@@ -1,8 +1,6 @@
 {
   "parser": "babel-eslint",
-  "extends": [
-    "eslint:recommended"
-  ],
+  "extends": ["eslint:recommended", "plugin:prettier/recommended"],
   "parserOptions": {
     "ecmaVersion": 7,
     "sourceType": "module"
@@ -23,19 +21,23 @@
   "rules": {
     "no-console": [2, { "allow": ["warn", "error"] }],
     "semi": [2, "always"],
-    "quotes": [2, "single", { "avoidEscape": true }],
     "no-multiple-empty-lines": [2, { "max": 2, "maxEOF": 0 }],
     "eol-last": [2, "always"],
-    "no-unused-vars": [2, {
-      "vars": "all",
-      "args": "none",
-      "ignoreRestSiblings": false
-    }],
-    "no-unused-expressions": [2, {
-      "allowShortCircuit": true,
-      "allowTernary": true,
-      "allowTaggedTemplates": true
-    }],
-    "object-curly-spacing": [2, "always", { "arraysInObjects": false }]
+    "no-unused-vars": [
+      2,
+      {
+        "vars": "all",
+        "args": "none",
+        "ignoreRestSiblings": false
+      }
+    ],
+    "no-unused-expressions": [
+      2,
+      {
+        "allowShortCircuit": true,
+        "allowTernary": true,
+        "allowTaggedTemplates": true
+      }
+    ],
   }
 }

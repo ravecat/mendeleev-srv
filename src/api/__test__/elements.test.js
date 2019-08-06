@@ -7,14 +7,15 @@ import element from './element.json';
 chai.use(chaiHttp);
 chai.should();
 
-describe('API/api/elements', function () {
-  beforeEach(function (done) {
-    Elements.deleteMany({}, err => { 
-      done();           
-    });   
+describe('API/api/elements', function() {
+  beforeEach(function(done) {
+    Elements.deleteMany({}, err => {
+      done();
+    });
   });
-  it('GET/api/elements Get element list', function (done) {
-    chai.request(app)
+  it('GET/api/elements Get element list', function(done) {
+    chai
+      .request(app)
       .get('/api/elements')
       .end((err, res) => {
         res.should.have.status(200);
@@ -24,8 +25,9 @@ describe('API/api/elements', function () {
       });
   });
 
-  it('POST/api/elements Create element successfully', (done) => {
-    chai.request(app)
+  it('POST/api/elements Create element successfully', done => {
+    chai
+      .request(app)
       .post('/api/elements')
       .send(element)
       .end((err, res) => {
@@ -37,9 +39,10 @@ describe('API/api/elements', function () {
       });
   });
 
-  it('GET/api/elements/:id Get element by atomic number', (done) => {
+  it('GET/api/elements/:id Get element by atomic number', done => {
     Elements.create(element, (err, data) => {
-      chai.request(app)
+      chai
+        .request(app)
         .get(`/api/elements/${data._id}`)
         .end((err, res) => {
           res.should.have.status(200);
@@ -52,9 +55,10 @@ describe('API/api/elements', function () {
     });
   });
 
-  it('PUT/api/elements/:id Update element', (done) => {
+  it('PUT/api/elements/:id Update element', done => {
     Elements.create(element, (err, data) => {
-      chai.request(app)
+      chai
+        .request(app)
         .put(`/api/elements/${data._id}`)
         .send({ ...data._doc, name: 'Updated' })
         .end((err, res) => {
@@ -68,9 +72,10 @@ describe('API/api/elements', function () {
     });
   });
 
-  it('DELETE/api/elements/:id Delete element', (done) => {
+  it('DELETE/api/elements/:id Delete element', done => {
     Elements.create(element, (err, data) => {
-      chai.request(app)
+      chai
+        .request(app)
         .delete(`/api/elements/${data._id}`)
         .end((err, res) => {
           res.should.have.status(200);

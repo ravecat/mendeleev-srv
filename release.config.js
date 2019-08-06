@@ -10,29 +10,29 @@ module.exports = {
       {
         releaseRules: [{ type: 'docs', release: 'patch' }],
         parserOpts: {
-          noteKeywords: ['BREAKING CHANGE', 'BREAKING CHANGES']
-        }
-      }
+          noteKeywords: ['BREAKING CHANGE', 'BREAKING CHANGES'],
+        },
+      },
     ],
     [
       '@semantic-release/release-notes-generator',
       {
         parserOpts: {
-          referenceActions: ['META']
+          referenceActions: ['META'],
         },
         writerOpts: {
-          commitsSort: ['subject', 'scope']
-        }
-      }
+          commitsSort: ['subject', 'scope'],
+        },
+      },
     ],
     '@semantic-release/changelog',
     [
       '@semantic-release/git',
       {
         assets: ['CHANGELOG.md', 'package.json'],
-        message: 'build(release): ${nextRelease.version}[skip ci]\n${nextRelease.notes}'
-      }
+        message: 'build(release): ${nextRelease.version}[skip ci]\n${nextRelease.notes}',
+      },
     ],
-    '@semantic-release/gitlab'
-  ]
+    '@semantic-release/gitlab',
+  ],
 };

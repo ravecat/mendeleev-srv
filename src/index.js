@@ -10,16 +10,27 @@ import api from './api';
 
 const app = express();
 
-const { mode, port, databaseName, databaseHost, databasePort, corsHeaders: exposedHeaders, bodyLimit, errorStatus } = config;
+const {
+  mode,
+  port,
+  databaseName,
+  databaseHost,
+  databasePort,
+  corsHeaders: exposedHeaders,
+  bodyLimit,
+  errorStatus,
+} = config;
 
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(cors({ exposedHeaders }));
-app.use(bodyParser.json({
-	limit : `${bodyLimit}kb`
-}));
+app.use(
+  bodyParser.json({
+    limit: `${bodyLimit}kb`,
+  }),
+);
 app.use('/api', api());
 
 // catch 404 and forward to error handler
@@ -31,11 +42,13 @@ app.use(function(req, res, next) {
 app.use(function(err, req, res, next) {
   res.status(err.status || errorStatus).send({
     status: err.status,
-    error: err
+    error: err,
   });
 });
 
-mongoose.connect(`mongodb://${databaseHost}:${databasePort}/${databaseName}`, { useNewUrlParser: true });
+mongoose.connect(`mongodb://${databaseHost}:${databasePort}/${databaseName}`, {
+  useNewUrlParser: true,
+});
 mongoose.connection.on('error', err => {
   console.error(err);
   console.warn('MongoDB connection error. Please make sure MongoDB is running correctly\n');

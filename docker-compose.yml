@@ -1,4 +1,4 @@
-version: "3.5"
+version: '3.5'
 
 services:
   mongo:
@@ -25,6 +25,6 @@ services:
       - mendeleev_api
 
 networks:
-  mendeleev_api:
-    name: mendeleev_api
+  production:
+    name: production
     driver: bridge

@@ -5,7 +5,7 @@ services:
 
 cache:
   paths:
-  - node_modules/
+    - node_modules/
 
 variables:
   IMAGE: ravecat/mendeleev_api
@@ -17,17 +17,28 @@ stages:
   - build
   - deploy
 
-test:
+test_api:
   image: node:10.13-alpine
   stage: test
   tags:
     - docker
   dependencies: []
   script:
-    - npm i -g yarn 
+    - npm i -g yarn
+    - yarn
+    - ./node_modules/.bin/mocha --opts .mocharc
+
+test_lint:
+  image: node:10.13-alpine
+  stage: test
+  tags:
+    - docker
+  dependencies: []
+  script:
+    - npm i -g yarn
     - yarn
     - yarn lint
-    - ./node_modules/.bin/mocha --opts .mocharc
+    - yarn prettier
 
 build:
   stage: build
@@ -35,7 +46,7 @@ build:
     - docker
   only:
     - develop
-  script: 
+  script:
     - echo "$(echo "$REGISTRY_PASSWORD" | base64 -d)" | docker login -u "$(echo "$REGISTRY_USER" | base64 -d)" --password-stdin
     - docker build -t $IMAGE .
     - docker push $IMAGE

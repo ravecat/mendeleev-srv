@@ -5,9 +5,10 @@ import app from '../../index';
 chai.use(chaiHttp);
 chai.should();
 
-describe('API/api', function () {
-  it('GET/ Root path', function (done) {
-    chai.request(app)
+describe('API/api', function() {
+  it('GET/ Root path', function(done) {
+    chai
+      .request(app)
       .get('/api')
       .end((err, res) => {
         res.should.have.status(200);
@@ -17,8 +18,9 @@ describe('API/api', function () {
       });
   });
 
-  it('Non-existing path', function (done) {
-    chai.request(app)
+  it('Non-existing path', function(done) {
+    chai
+      .request(app)
       .get('/path_not_exist')
       .end((err, res) => {
         res.should.have.status(404);

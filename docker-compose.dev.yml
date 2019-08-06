@@ -1,4 +1,4 @@
-version: "3.5"
+version: '3.5'
 
 services:
   mongo_dev:
@@ -12,12 +12,12 @@ services:
     container_name: mongo_seed
     volumes:
       - .:/app
-    command: mongoimport --host mongo_dev --db mendeleev --collection elements --drop --file /app/elements.json --jsonArray
+    command: mongoimport --host mongo_dev --db mendeleev --collection elements --drop --file /app/mock/elements.json --jsonArray
     networks:
       - dev
     depends_on:
       - mongo_dev
-  
+
   app_dev:
     image: node:10.13-alpine
     container_name: app_dev
