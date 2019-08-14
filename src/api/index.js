@@ -2,7 +2,7 @@ import { Router } from 'express';
 import elements from './elements';
 import { Elements } from '../models';
 
-export default () => {
+export default function api() {
   const router = Router();
 
   router.use('/elements', elements(Elements));
@@ -16,4 +16,4 @@ export default () => {
   });
 
   return router;
-};
+}

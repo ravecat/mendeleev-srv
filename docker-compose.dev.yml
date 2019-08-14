@@ -12,7 +12,7 @@ services:
     container_name: mongo_seed
     volumes:
       - .:/app
-    command: mongoimport --host mongo_dev --db mendeleev --collection elements --drop --file /app/mock/elements.json --jsonArray
+    command: mongorestore --host mongo_dev --gzip --archive=/app/mongo/initialData.gz
     networks:
       - dev
     depends_on:
@@ -28,7 +28,7 @@ services:
       - .:/app
     working_dir: /app
     ports:
-      - 3001:3000
+      - 3000:3000
     networks:
       - dev
     depends_on:

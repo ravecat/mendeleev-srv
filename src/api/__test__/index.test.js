@@ -5,11 +5,11 @@ import app from '../../index';
 chai.use(chaiHttp);
 chai.should();
 
-describe('API/api', function() {
+describe('API', function() {
   it('GET/ Root path', function(done) {
     chai
       .request(app)
-      .get('/api')
+      .get('/')
       .end((err, res) => {
         res.should.have.status(200);
         res.body.should.be.a('object');

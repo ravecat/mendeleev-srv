@@ -5172,10 +5172,10 @@ modify-values@^1.0.0:
   resolved "https://registry.yarnpkg.com/modify-values/-/modify-values-1.0.1.tgz#b3939fa605546474e3e3e3c63d64bd43b4ee6022"
   integrity sha512-xV2bxeN6F7oYjZWTe/YPAy6MN2M+sL4u/Rlm2AHCIVGfo2p1yGmBHQ6vHehl4bRTZBdHu3TSkWdYgkwpYzAGSw==
 
-mongo-express-middleware@^1.0.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/mongo-express-middleware/-/mongo-express-middleware-1.1.0.tgz#250e8285a00e57c7e4fd31c6422d439672104ac5"
-  integrity sha512-eOHHlrnpM5LC3zmudpVM3NKyCqqqQ3T8aEytqv7P0sk26ww429Q7BeUuPv69mYV6K4/Kw/2wFwDKJVOAoqxEfw==
+mongo-express-middleware@^1.5.0:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/mongo-express-middleware/-/mongo-express-middleware-1.5.0.tgz#9fda006633112b013fb3e22b855b924b712ee87a"
+  integrity sha512-NubkB4cqXiwEEQnwxmDuEdZorqOMFtdxmAmXR5CKz9vqVLw520OkhfWOuDabPAy44vl1yk/j/iZVjaZ/wPhJQg==
 
 mongodb-core@3.2.7:
   version "3.2.7"
@@ -5194,6 +5194,15 @@ mongodb@3.2.7:
   integrity sha512-2YdWrdf1PJgxcCrT1tWoL6nHuk6hCxhddAAaEh8QJL231ci4+P9FLyqopbTm2Z2sAU6mhCri+wd9r1hOcHdoMw==
   dependencies:
     mongodb-core "3.2.7"
+    safe-buffer "^5.1.2"
+
+mongodb@^3.3.0:
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/mongodb/-/mongodb-3.3.0.tgz#3ec6fa6260405b16fe76cc37b5d09684d13d8c11"
+  integrity sha512-QYa8YEN5uiJyIFdnn1vmBtiSveyygmQghsaL/RDnHqUzjGvkYe0vRg6UikCKba06cg6El/Lu7qzOYnR3vMhwlA==
+  dependencies:
+    bson "^1.1.1"
+    require_optional "^1.0.1"
     safe-buffer "^5.1.2"
 
 mongoose-legacy-pluralize@1.0.2:
