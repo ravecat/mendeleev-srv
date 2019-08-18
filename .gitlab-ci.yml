@@ -66,5 +66,5 @@ deploy:
     - apk add python-dev libffi-dev openssl-dev gcc libc-dev make
     - pip install docker-compose
     - docker-compose build --no-cache
-    - docker-compose up -d --build
+    - docker-compose up -d
     - docker logout

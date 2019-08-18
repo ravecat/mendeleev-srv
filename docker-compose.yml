@@ -4,6 +4,8 @@ services:
   mongo:
     container_name: ${DB_HOST}
     image: mongo:latest
+    volumes:
+      - ~/mongodb/mendeleev_api:/data/db
     networks:
       - mendeleev_api
 
@@ -18,13 +20,13 @@ services:
       - DB_PORT
     restart: always
     ports:
-      - ${PORT}:3000
+      - ${PORT}:${PORT}
     depends_on:
-      - ${DB_HOST}
+      - mongo
     networks:
       - mendeleev_api
 
 networks:
-  production:
-    name: production
+  mendeleev_api:
+    name: mendeleev_api
     driver: bridge
