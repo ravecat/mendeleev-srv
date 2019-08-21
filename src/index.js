@@ -6,7 +6,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import config from './config';
-import api from './api';
+import { root, elements } from './api';
 
 const app = express();
 
@@ -31,7 +31,8 @@ app.use(
     limit: `${bodyLimit}kb`,
   }),
 );
-app.use('/', api());
+app.use('/', root);
+app.use('/elements', elements);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

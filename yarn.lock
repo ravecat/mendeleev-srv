@@ -5172,10 +5172,10 @@ modify-values@^1.0.0:
   resolved "https://registry.yarnpkg.com/modify-values/-/modify-values-1.0.1.tgz#b3939fa605546474e3e3e3c63d64bd43b4ee6022"
   integrity sha512-xV2bxeN6F7oYjZWTe/YPAy6MN2M+sL4u/Rlm2AHCIVGfo2p1yGmBHQ6vHehl4bRTZBdHu3TSkWdYgkwpYzAGSw==
 
-mongo-express-middleware@^1.5.0:
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/mongo-express-middleware/-/mongo-express-middleware-1.5.0.tgz#9fda006633112b013fb3e22b855b924b712ee87a"
-  integrity sha512-NubkB4cqXiwEEQnwxmDuEdZorqOMFtdxmAmXR5CKz9vqVLw520OkhfWOuDabPAy44vl1yk/j/iZVjaZ/wPhJQg==
+mongo-express-middleware@^1.6.0:
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/mongo-express-middleware/-/mongo-express-middleware-1.6.0.tgz#9fc946037d6927c6889fb1f1dfc31d8cbd79f582"
+  integrity sha512-3jBYDJWSgGwtFgbSL9D/LSxQl6wqum55tPeLH1GHPhuooUNEZv0HT0JKJR5KGz17PfTGqnbh60HAN7hD0/I/zw==
 
 mongodb-core@3.2.7:
   version "3.2.7"

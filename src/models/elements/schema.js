@@ -16,6 +16,7 @@ export default new mongoose.Schema({
       of: String,
     },
   },
-  atomic_number: Number,
+  atomicNumber: Number,
+  atomicWeight: Number,
   symbol: String,
 });
