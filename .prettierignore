@@ -3,4 +3,8 @@
 /coverage
 /mock
 
+CHANGELOG.md
+
 *.log*
+*.yml
+*.yaml

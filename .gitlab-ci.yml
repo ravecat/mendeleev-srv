@@ -1,70 +1,110 @@
-image: docker:stable
-
 services:
-  - mongo:latest
+  - mongo:3.6.22-xenial
 
 cache:
   paths:
     - node_modules/
 
 variables:
-  IMAGE: ravecat/mendeleev_api
-  APP_CONTAINER: mendeleev_api
   DB_HOST: mongo
+
+.docker-login: &docker-login
+  - docker -v
+  - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
 
 stages:
   - test
   - build
   - deploy
 
-test_api:
-  image: node:10.13-alpine
+test:api:
+  image: node:15.8-alpine3.13
   stage: test
   tags:
     - docker
   dependencies: []
   script:
-    - npm i -g yarn
-    - yarn
-    - ./node_modules/.bin/mocha --opts .mocharc
+    - yarn test
 
-test_lint:
-  image: node:10.13-alpine
+test:lint:
+  image: node:15.8-alpine3.13
   stage: test
   tags:
     - docker
   dependencies: []
   script:
-    - npm i -g yarn
     - yarn
     - yarn lint
-    - yarn prettier
+
+test:commit:
+  image: node:15.8-alpine3.13
+  stage: test
+  tags:
+    - docker
+  dependencies: []
+  script:
+    - yarn
+    - yarn test:commit
+
+build:commit:
+  stage: build
+  image: ${REGISTRY}/${REGISTRY_NAMESPACE}/docker-compose:1.26.2
+  tags:
+    - docker
+  rules:
+    - if: '$CI_COMMIT_BRANCH != "master"'
+      when: manual
+  before_script:
+    - *docker-login
+  script:
+    - docker build --no-cache -t $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA .
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
+
+deploy:commit:
+  stage: deploy
+  image: ${REGISTRY}/${REGISTRY_NAMESPACE}/docker-compose:1.26.2
+  tags:
+    - docker
+  rules:
+    - if: '$CI_COMMIT_BRANCH != "master"'
+  needs: ["build:commit"]
+  variables:
+    DOCKER_GATEWAY_NETWORK: $DOCKER_GATEWAY_NETWORK
+    DOMAIN_NAME: $DOMAIN_NAME
+    RELEASE: $CI_COMMIT_SHORT_SHA
+  before_script:
+    - *docker-login
+  script:
+    - docker-compose -f .config/docker-compose.commit.yml build --no-cache
+    - docker-compose -f .config/docker-compose.commit.yml up -d
 
 build:
   stage: build
+  image: ${REGISTRY}/${REGISTRY_NAMESPACE}/docker-compose:1.26.2
   tags:
     - docker
-  only:
-    - develop
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "master"'
+    - if: '$CI_COMMIT_BRANCH == "migrate"'
+  before_script:
+    - *docker-login
   script:
-    - echo "$(echo "$REGISTRY_PASSWORD" | base64 -d)" | docker login -u "$(echo "$REGISTRY_USER" | base64 -d)" --password-stdin
-    - docker build -t $IMAGE .
-    - docker push $IMAGE
-    - docker logout
+    - "RELEASE=$(awk -F'\"' '/\"version\": \".+\"/{ print $4; exit; }' package.json)"
+    - docker build --no-cache -t $CI_REGISTRY_IMAGE:$RELEASE .
+    - docker push $CI_REGISTRY_IMAGE:$RELEASE
 
 deploy:
   stage: deploy
+  image: ${REGISTRY}/${REGISTRY_NAMESPACE}/docker-compose:1.26.2
   tags:
     - docker
-  only:
-    - master
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "master"'
   variables:
-    PORT: 3000
+    DOCKER_GATEWAY_NETWORK: $DOCKER_GATEWAY_NETWORK
+    DOMAIN_NAME: $DOMAIN_NAME
+  before_script:
+    - *docker-login
   script:
-    - echo "$(echo "$REGISTRY_PASSWORD" | base64 -d)" | docker login -u "$(echo "$REGISTRY_USER" | base64 -d)" --password-stdin
-    - apk add py-pip
-    - apk add python-dev libffi-dev openssl-dev gcc libc-dev make
-    - pip install docker-compose
     - docker-compose build --no-cache
     - docker-compose up -d
-    - docker logout

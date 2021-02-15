@@ -3,38 +3,38 @@ version: '3.5'
 services:
   mongo_dev:
     container_name: mongo_dev
-    image: mongo:latest
+    image: mongo:3.6.22-xenial
     networks:
-      - dev
+      - mendeleev-api-dev
 
   mongo_seed:
-    image: mongo:latest
+    image: mongo:3.6.22-xenial
     container_name: mongo_seed
     volumes:
-      - .:/app
+      - ../:/app
     command: mongorestore --host mongo_dev --gzip --archive=/app/mongo/initialData.gz
     networks:
-      - dev
+      - mendeleev-api-dev
     depends_on:
       - mongo_dev
 
   app_dev:
-    image: node:10.13-alpine
+    image: node:15.8-alpine3.13
     container_name: app_dev
-    command: sh -c "yarn && ./node_modules/.bin/nodemon -w src --exec babel-node src"
+    command: sh -c "./node_modules/.bin/nodemon -w src --exec babel-node src"
     environment:
       - DB_HOST=mongo_dev
     volumes:
-      - .:/app
+      - ../:/app
     working_dir: /app
     ports:
       - 3000:3000
     networks:
-      - dev
+      - mendeleev-api-dev
     depends_on:
       - mongo_dev
 
 networks:
-  dev:
-    name: dev
+  mendeleev-api-dev:
+    name: mendeleev-api-dev
     driver: bridge

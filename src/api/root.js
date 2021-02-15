@@ -1,13 +1,13 @@
-import { Router } from 'express';
+import { Router } from "express";
 
 export default (function root() {
   const router = Router();
 
-  router.get('/', (req, res) => {
+  router.get("/", (req, res) => {
     res.status(200).send({
-      message: 'Mendeleev API',
+      message: "Mendeleev API",
       data: {
-        version: 'v1',
+        version: "v1",
       },
     });
   });

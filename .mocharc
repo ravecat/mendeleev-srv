@@ -1,3 +1,0 @@
---recursive src/**/?(*.)test.js
---require @babel/register
---exit

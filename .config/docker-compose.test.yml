@@ -3,16 +3,16 @@ version: '3.5'
 services:
   mongo_test:
     container_name: mongo_test
-    image: mongo:latest
+    image: mongo:3.6.22-xenial
     networks:
       - test
 
   app_test:
-    image: node:10.13-alpine
-    command: sh -c "yarn && ./node_modules/.bin/mocha --opts .mocharc"
+    image: node:15.8-alpine3.13
+    command: "yarn test:app"
     container_name: app_test
     volumes:
-      - .:/app
+      - ../:/app
     working_dir: /app
     environment:
       - NODE_ENV=test
@@ -25,4 +25,4 @@ services:
 networks:
   test:
     driver: bridge
-    name: test
+    name: mendeleev-api-test

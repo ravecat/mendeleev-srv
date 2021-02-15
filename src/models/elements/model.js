@@ -1,4 +1,5 @@
-import mongoose from 'mongoose';
-import schema from './schema';
+import mongoose from "mongoose";
 
-export default mongoose.model('Elements', schema);
+import schema from "./schema";
+
+export default mongoose.model("Elements", schema);

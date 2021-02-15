@@ -1,30 +1,18 @@
-import chai from 'chai';
-import chaiHttp from 'chai-http';
-import app from '../../index';
+import app from "../../index";
 
-chai.use(chaiHttp);
-chai.should();
+const request = require("supertest");
 
-describe('API', function() {
-  it('GET/ Root path', function(done) {
-    chai
-      .request(app)
-      .get('/')
-      .end((err, res) => {
-        res.should.have.status(200);
-        res.body.should.be.a('object');
-        res.body.should.have.property('data');
-        done();
-      });
+describe("API/", function () {
+  it("GET/ Root path", async () => {
+    const res = await request(app).get("/");
+
+    expect(res.status).toEqual(200);
+    // expect(res.body).toMatchObject();
   });
 
-  it('Non-existing path', function(done) {
-    chai
-      .request(app)
-      .get('/path_not_exist')
-      .end((err, res) => {
-        res.should.have.status(404);
-        done();
-      });
+  it("GET/non-existing-path", async () => {
+    const res = await request(app).post("/non-existing-path");
+
+    expect(res.status).toEqual(404);
   });
 });

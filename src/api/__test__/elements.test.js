@@ -1,141 +1,100 @@
-import chai from 'chai';
-import chaiHttp from 'chai-http';
-import app from '../../index';
-import { Elements } from '../../models';
+import app from "../../index";
+import { Elements } from "../../models";
 
-chai.use(chaiHttp);
-chai.should();
+const request = require("supertest");
 
-describe('API/elements', function() {
-  var element;
+describe("API/elements", function () {
+  const element = {
+    name: "Hydrogen",
+    symbol: "H",
+    atomicWeight: 1,
+    atomicNumber: 1,
+  };
 
-  before(function(done) {
-    element = JSON.parse(require('fs').readFileSync(`${__dirname}/data.json`));
+  beforeEach(async () => {
+    try {
+      const res = await Elements.create(element);
 
-    done();
+      console.warn("Element created\n", res);
+    } catch (err) {
+      console.warn(err);
+    }
   });
 
-  beforeEach(function(done) {
-    Elements.deleteMany({}, err => {
-      if (err) console.warn(err);
+  afterEach(async () => {
+    try {
+      await Elements.deleteMany({});
+    } catch (err) {
+      console.warn(err);
+    }
+  });
 
-      done();
+  it("POST/elements Create element", async () => {
+    const res = await request(app).post("/elements").send(element);
+
+    expect(res.status).toEqual(200);
+    expect(res.body).toMatchObject(element);
+  });
+
+  it("GET/elements Get element list", async () => {
+    const res = await request(app).get("/elements");
+
+    expect(res.status).toEqual(200);
+    expect(res.body[0]).toMatchObject(element);
+  });
+
+  it("GET/elements Get element list with params", async () => {
+    await Elements.create({ ...element, atomicNumber: 2 });
+
+    const res = await request(app).get(
+      `/elements?atomicNumber=${element.atomicNumber}`
+    );
+
+    expect(res.status).toEqual(200);
+    expect(res.body.length).toBe(1);
+    expect(res.body).toMatchObject([element]);
+  });
+
+  it("GET/elements/:id Get element by id", async () => {
+    const { _id: id } = await Elements.create({ ...element, atomicNumber: 2 });
+
+    const res = await request(app).get(`/elements/${id}`);
+
+    expect(res.status).toEqual(200);
+    expect(res.body).toMatchObject({ ...element, atomicNumber: 2 });
+    expect(res.body.atomicNumber).toEqual(2);
+  });
+
+  it("PUT/elements/:id Update element", async () => {
+    const { _id: id } = await Elements.create({ ...element, atomicNumber: 2 });
+    const updatedField = "Updated";
+
+    const res = await request(app)
+      .put(`/elements/${id}`)
+      .send({ ...element, name: updatedField });
+
+    expect(res.status).toEqual(200);
+    expect(res.body.name).toEqual(updatedField);
+  });
+
+  it("GET/elements/:atomicNumber Get element by atomicNumber", async () => {
+    const { atomicNumber } = await Elements.create({
+      ...element,
+      atomicNumber: 2,
     });
+
+    const res = await request(app).get(`/elements/${atomicNumber}`);
+
+    expect(res.status).toEqual(200);
+    expect(res.body[0]).toMatchObject({ ...element, atomicNumber: 2 });
+    expect(res.body[0].atomicNumber).toEqual(atomicNumber);
   });
 
-  it('POST/elements Create element', done => {
-    chai
-      .request(app)
-      .post('/elements')
-      .send(element)
-      .end((err, res) => {
-        res.should.have.status(200);
-        res.body.should.be.a('object');
-        res.body.should.have.property('name');
-        res.body.should.have.property('symbol');
-        res.body.should.have.property('atomicWeight');
-        res.body.should.have.property('atomicNumber');
-        done();
-      });
-  });
+  it("DELETE/elements/:id Delete element", async () => {
+    const { _id: id } = await Elements.create(element);
+    const res = await request(app).delete(`/elements/${id}`);
 
-  it('GET/elements Get element list', function(done) {
-    Elements.create(element, () => {
-      chai
-        .request(app)
-        .get('/elements')
-        .end((err, res) => {
-          res.should.have.status(200);
-          res.body.should.be.a('array');
-          res.body.length.should.be.eql(1);
-          res.body[0].should.have.property('name');
-          res.body[0].should.have.property('symbol');
-          res.body[0].should.have.property('atomicNumber').eql(element.atomicNumber);
-          res.body[0].should.have.property('atomicWeight').eql(element.atomicWeight);
-          done();
-        });
-    });
-  });
-
-  it('GET/elements Get element list with params', function(done) {
-    Elements.create(element, () => {
-      chai
-        .request(app)
-        .get(`/elements?atomicNumber=${element.atomicNumber}`)
-        .end((err, res) => {
-          res.should.have.status(200);
-          res.body.should.be.a('array');
-          res.body.length.should.be.eql(1);
-          res.body[0].should.have.property('name');
-          res.body[0].should.have.property('symbol');
-          res.body[0].should.have.property('atomicNumber').eql(element.atomicNumber);
-          res.body[0].should.have.property('atomicWeight').eql(element.atomicWeight);
-          done();
-        });
-    });
-  });
-
-  it('GET/elements/:id Get element by id', done => {
-    Elements.create(element, (err, data) => {
-      chai
-        .request(app)
-        .get(`/elements/${data._id}`)
-        .end((err, res) => {
-          res.should.have.status(200);
-          res.body.should.be.a('object');
-          res.body.should.have.property('name');
-          res.body.should.have.property('symbol');
-          res.body.should.have.property('atomicNumber').eql(element.atomicNumber);
-          res.body.should.have.property('atomicWeight').eql(element.atomicWeight);
-          done();
-        });
-    });
-  });
-
-  it('PUT/elements/:id Update element', done => {
-    Elements.create(element, (err, data) => {
-      chai
-        .request(app)
-        .put(`/elements/${data._id}`)
-        .send({ ...data._doc, name: 'Updated' })
-        .end((err, res) => {
-          res.should.have.status(200);
-          res.body.should.be.a('object');
-          res.body.should.have.property('name');
-          res.body.should.have.property('symbol');
-          res.body.should.have.property('name').eql('Updated');
-          done();
-        });
-    });
-  });
-
-  it('GET/elements/:atomicNumber Get element by atomicNumber', done => {
-    Elements.create(element, (err, data) => {
-      chai
-        .request(app)
-        .get(`/elements/${element.atomicNumber}`)
-        .end((err, res) => {
-          res.should.have.status(200);
-          res.body.should.be.a('array');
-          res.body[0].should.have.property('name');
-          res.body[0].should.have.property('symbol');
-          res.body[0].should.have.property('atomicNumber').eql(element.atomicNumber);
-          res.body[0].should.have.property('atomicWeight').eql(element.atomicWeight);
-          done();
-        });
-    });
-  });
-  it('DELETE/elements/:id Delete element', done => {
-    Elements.create(element, (err, data) => {
-      chai
-        .request(app)
-        .delete(`/elements/${data._id}`)
-        .end((err, res) => {
-          res.should.have.status(200);
-          res.body.should.be.a('object');
-          res.body.should.have.property('id').eql(`${data._id}`);
-          done();
-        });
-    });
+    expect(res.status).toEqual(200);
+    expect(res.body.id).toEqual(`${id}`);
   });
 });

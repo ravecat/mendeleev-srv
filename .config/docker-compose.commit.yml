@@ -2,16 +2,14 @@ version: '3.5'
 
 services:
   mongo:
-    container_name: mendeleev-api-mongo
+    container_name: "mendeleev-api-mongo-${RELEASE}"
     image: mongo:3.6.22-xenial
     restart: on-failure
-    volumes:
-      - ~/mongodb/mendeleev-api:/data/db
     networks:
       - mendeleev-api
 
   mendeleev-api:
-    container_name: mendeleev-api
+    container_name: "mendeleev-api-${RELEASE}"
     image: "${CI_REGISTRY_IMAGE}:${RELEASE}"
     environment:
       - NODE_ENV
@@ -23,14 +21,14 @@ services:
     depends_on:
       - mongo
     labels:
-      - traefik.http.routers.mendeleev-api.rule=Host(`api.mendeleev.${DOMAIN_NAME}`)
+      - traefik.http.routers.mendeleev-api.rule=Host(`${RELEASE}.api.mendeleev.${DOMAIN_NAME}`)
     networks:
       - mendeleev-api
       - gateway
 
 networks:
   mendeleev-api:
-    name: mendeleev-api
+    name: "mendeleev-api-${RELEASE}"
     driver: bridge
   gateway:
     name: "${DOCKER_GATEWAY_NETWORK}"

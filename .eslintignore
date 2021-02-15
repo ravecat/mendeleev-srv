@@ -3,3 +3,9 @@
 /coverage
 /dist
 /public/scripts/pdf.js
+/scripts
+/public
+/legacy
+/config
+*.config.js
+.eslintrc.js

@@ -1,10 +1,12 @@
-FROM node:10.13-alpine as builder
+FROM node:15.8-alpine3.13 as builder
+
 WORKDIR /app
 COPY . .
 RUN yarn install && \
     ./node_modules/.bin/babel src -s -D -d dist
 
-FROM node:10.13-alpine
+FROM node:15.8-alpine3.13
+
 WORKDIR /app
 COPY package*.json ./
 RUN yarn install --production && \
