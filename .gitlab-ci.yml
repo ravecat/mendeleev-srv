@@ -1,42 +1,27 @@
-services:
-  - mongo:3.6.22-xenial
-
-cache:
-  paths:
-    - node_modules/
-
-variables:
-  DB_HOST: mongo
+stages:
+  - test
+  - deploy
 
 .docker-login: &docker-login
   - docker -v
   - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
 
-stages:
-  - test
-  - build
-  - deploy
-
-test:api:
+test_app:
   image: node:15.8-alpine3.13
   stage: test
   tags:
     - docker
-  dependencies: []
-  script:
-    - yarn test
-
-test:lint:
-  image: node:15.8-alpine3.13
-  stage: test
-  tags:
-    - docker
+  services:
+    - name: mongo:3.6.22-xenial
+      alias: mongo
+  variables: 
+    DB_HOST: mongo
   dependencies: []
   script:
     - yarn
-    - yarn lint
+    - yarn test:app
 
-test:commit:
+test_lint:
   image: node:15.8-alpine3.13
   stage: test
   tags:
@@ -45,66 +30,36 @@ test:commit:
   script:
     - yarn
     - yarn test:commit
+    - yarn test:lint
+    - yarn test:prettier
 
-build:commit:
-  stage: build
-  image: ${REGISTRY}/${REGISTRY_NAMESPACE}/docker-compose:1.26.2
-  tags:
-    - docker
-  rules:
-    - if: '$CI_COMMIT_BRANCH != "master"'
-      when: manual
-  before_script:
-    - *docker-login
-  script:
-    - docker build --no-cache -t $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA .
-    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
-
-deploy:commit:
+approve_deploy_branch:
   stage: deploy
-  image: ${REGISTRY}/${REGISTRY_NAMESPACE}/docker-compose:1.26.2
-  tags:
-    - docker
-  rules:
-    - if: '$CI_COMMIT_BRANCH != "master"'
-  needs: ["build:commit"]
-  variables:
-    DOCKER_GATEWAY_NETWORK: $DOCKER_GATEWAY_NETWORK
-    DOMAIN_NAME: $DOMAIN_NAME
-    RELEASE: $CI_COMMIT_SHORT_SHA
-  before_script:
-    - *docker-login
-  script:
-    - docker-compose -f .config/docker-compose.commit.yml build --no-cache
-    - docker-compose -f .config/docker-compose.commit.yml up -d
-
-build:
-  stage: build
-  image: ${REGISTRY}/${REGISTRY_NAMESPACE}/docker-compose:1.26.2
-  tags:
-    - docker
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "master"'
-    - if: '$CI_COMMIT_BRANCH == "migrate"'
-  before_script:
-    - *docker-login
-  script:
-    - "RELEASE=$(awk -F'\"' '/\"version\": \".+\"/{ print $4; exit; }' package.json)"
-    - docker build --no-cache -t $CI_REGISTRY_IMAGE:$RELEASE .
-    - docker push $CI_REGISTRY_IMAGE:$RELEASE
+  allow_failure: true
+  when: manual
+  except:
+    refs:
+      - master
+  trigger:
+    include: .config/.gitlab-ci.deploy-branch.yml
 
 deploy:
   stage: deploy
-  image: ${REGISTRY}/${REGISTRY_NAMESPACE}/docker-compose:1.26.2
+  image: ${REGISTRY}/${REGISTRY_NAMESPACE}/node:15.7-docker-compose1.27
   tags:
     - docker
   rules:
     - if: '$CI_COMMIT_BRANCH == "master"'
-  variables:
-    DOCKER_GATEWAY_NETWORK: $DOCKER_GATEWAY_NETWORK
-    DOMAIN_NAME: $DOMAIN_NAME
   before_script:
     - *docker-login
+  variables:
+    PROJECT: mendeleev-api
+    HOST: ${DOMAIN_PATH}.${DOMAIN_NAME}
+    DOCKER_GATEWAY_NETWORK: $DOCKER_GATEWAY_NETWORK
+    IMAGE: ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHORT_SHA}
+    RELEASE: master-${CI_COMMIT_SHORT_SHA}
+    DB_HOST: host.docker.internal
   script:
-    - docker-compose build --no-cache
-    - docker-compose up -d
+    - docker build --no-cache -t $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA .
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
+    - yarn start

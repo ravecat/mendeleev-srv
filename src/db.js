@@ -9,6 +9,7 @@ export const dbConnect = (onOpen) => {
     `mongodb://${databaseHost}:${databasePort}/${databaseName}`,
     {
       useNewUrlParser: true,
+      useUnifiedTopology: true,
     }
   );
 
@@ -18,7 +19,7 @@ export const dbConnect = (onOpen) => {
     );
     console.error(err);
 
-    process.exit();
+    process.exitCode = 1;
   });
 
   mongoose.connection.on("open", onOpen);

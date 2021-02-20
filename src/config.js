@@ -23,7 +23,7 @@ dotenvFiles.forEach((dotenvFile) => {
 export default {
   mode: NODE_ENV,
   port: process.env.PORT || 3000,
-  databaseName: process.env.DB_NAME || "mendeleev-api",
+  databaseName: process.env.DB_NAME || "mendeleev",
   databaseHost: process.env.DB_HOST || "localhost",
   databasePort: process.env.DB_PORT || 27017,
   bodyLimit: process.env.BODY_LIMIT || 100,

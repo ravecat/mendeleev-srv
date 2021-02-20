@@ -1,0 +1,77 @@
+stages: 
+  - deploy
+  - destroy
+
+.docker-login: &docker-login
+  - docker -v
+  - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+
+deploy_branch:
+  stage: deploy
+  image: ${REGISTRY}/${REGISTRY_NAMESPACE}/node:15.7-docker-compose1.27
+  tags:
+    - docker
+  rules:
+    - if: '$CI_COMMIT_BRANCH != "master"'
+  before_script:
+    - *docker-login
+  variables:
+    PROJECT: mendeleev-api
+    HOST: "${CI_COMMIT_SHORT_SHA}.${DOMAIN_PATH}.${DOMAIN_NAME}"
+    DOCKER_GATEWAY_NETWORK: $DOCKER_GATEWAY_NETWORK
+    RELEASE: $CI_COMMIT_SHORT_SHA
+    DB_HOST: host.docker.internal
+  script:
+    - docker build --no-cache -t $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA .
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
+    - docker run --name ${PROJECT}-${RELEASE} -d
+        --restart=always
+        --env DB_HOST
+        --add-host host.docker.internal:host-gateway
+        --label "traefik.http.routers.${RELEASE}.rule=Host(\"${HOST}\")"
+        --label traefik.http.services.${RELEASE}.loadbalancer.server.port=3000
+        --network=${DOCKER_GATEWAY_NETWORK}
+        ${CI_REGISTRY_IMAGE}:${RELEASE}
+  environment:
+    name: $CI_COMMIT_REF_NAME
+    on_stop: destroy_branch_env
+    url: "http://${CI_COMMIT_SHORT_SHA}.${DOMAIN_PATH}.${DOMAIN_NAME}"
+
+destroy_branch_env:
+  stage: destroy
+  image: ${REGISTRY}/${REGISTRY_NAMESPACE}/node:15.7-docker-compose1.27
+  tags:
+    - docker
+  rules:
+    - if: '$CI_COMMIT_BRANCH != "master"'
+      when: delayed
+      start_in: 12 hours
+  variables:
+    HOST: ${CI_COMMIT_SHORT_SHA}.${DOMAIN_PATH}.${DOMAIN_NAME}
+    PROJECT: mendeleev-api
+    DOCKER_GATEWAY_NETWORK: $DOCKER_GATEWAY_NETWORK
+    RELEASE: $CI_COMMIT_SHORT_SHA
+  script:
+    - docker stop ${PROJECT}-${RELEASE}
+    - docker rm ${PROJECT}-${RELEASE}
+  environment:
+    name: $CI_COMMIT_REF_NAME
+    action: stop
+
+deploy:
+  stage: deploy
+  image: ${REGISTRY}/${REGISTRY_NAMESPACE}/node:15.7-docker-compose1.27
+  tags:
+    - docker stop ${PROJECT}-${RELEASE}
+    - docker rm ${PROJECT}-${RELEASE}
+
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "master"'
+  before_script:
+    - *docker-login
+  script:
+    - "RELEASE=$(awk -F'\"' '/\"version\": \".+\"/{ print $4; exit; }' package.json)"
+    - docker build --no-cache -t $CI_REGISTRY_IMAGE:$RELEASE .
+    - docker push $CI_REGISTRY_IMAGE:$RELEASE
+    - docker-compose build --no-cache
+    - docker-compose up -d

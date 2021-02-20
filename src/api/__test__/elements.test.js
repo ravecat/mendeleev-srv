@@ -13,9 +13,7 @@ describe("API/elements", function () {
 
   beforeEach(async () => {
     try {
-      const res = await Elements.create(element);
-
-      console.warn("Element created\n", res);
+      await Elements.create(element);
     } catch (err) {
       console.warn(err);
     }

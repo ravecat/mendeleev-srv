@@ -1,0 +1,13 @@
+version: '3.5'
+
+services:
+  app:
+    container_name: ${PROJECT:-app}-${RELEASE}-app
+    image: ${IMAGE:-node:15.8-alpine3.13}
+    environment:
+      DB_HOST:
+      NODE_ENV:
+      PORT:
+      DB_NAME:
+      DB_PORT:
+    restart: on-failure

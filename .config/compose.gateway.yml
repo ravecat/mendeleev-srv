@@ -1,0 +1,17 @@
+version: '3.5'
+
+services:
+  app:
+    networks:
+      - gateway
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    labels:
+      - traefik.http.routers.${RELEASE}.rule=Host(`${HOST:?"SET HOST"}`)
+      - traefik.http.services.${RELEASE}.loadbalancer.server.port=3000
+
+networks:
+  gateway:
+    name: "${DOCKER_GATEWAY_NETWORK}"
+    external: true
+

@@ -4,17 +4,21 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev:down": "docker-compose -f .config/docker-compose.dev.yml down",
-    "dev:up": "NODE_ENV=dev docker-compose -f .config/docker-compose.dev.yml up --build",
-    "dev": "yarn && yarn dev:down && yarn dev:up",
-    "test": "yarn && docker-compose -f .config/docker-compose.test.yml up --build --exit-code-from app_test",
-    "test:app": "NODE_ENV=test jest -c .config/jest.config.js --passWithNoTests --forceExit",
+    "dev": "yarn && yarn dev:down && docker-compose -f .config/compose.common.yml -f .config/compose.dev.yml up",
+    "dev:config": "docker-compose -f .config/compose.common.yml -f .config/compose.dev.yml config",
+    "dev:down": "docker-compose -f .config/compose.common.yml -f .config/compose.dev.yml down",
+    "dev:app": "./node_modules/.bin/nodemon -w src --exec babel-node src",
+    "test": "yarn && RELEASE=test docker-compose -f .config/compose.common.yml -f .config/compose.test.yml up --exit-code-from app",
+    "test:app": "./node_modules/.bin/jest -c .config/jest.config.js --passWithNoTests --forceExit",
+    "test:config": "yarn && RELEASE=test docker-compose -f .config/compose.common.yml -f .config/compose.test.yml config",
+    "start": "docker-compose -f .config/compose.common.yml -f .config/compose.gateway.yml up -d",
+    "start:config": "docker-compose -f .config/compose.common.yml -f .config/compose.gateway.yml config",
     "test:commit": "commitlint -g .config/commitlint.config.js --from=HEAD~1",
+    "test:prettier": "prettier --check *.{md,yml,json}",
+    "test:lint": "eslint '**/*.{js,jsx,ts,tsx}'",
+    "test:lint:fix": "yarn test:lint --fix",
     "commit": "./node_modules/cz-customizable/standalone.js",
-    "lint": "eslint '**/*.{js,jsx,ts,tsx}'",
-    "lint:fix": "yarn lint --fix",
-    "prettier": "prettier --check *.{md,yml,json}",
-    "release": "semantic-release --extends ./.config/.releaserc.js"
+    "release": "semantic-release --extends .config/.releaserc.js"
   },
   "dependencies": {
     "body-parser": "^1.18.3",
@@ -61,7 +65,7 @@
     "mongodb": "^3.3.0",
     "nodemon": "^1.18.9",
     "prettier": "^2.2.1",
-    "semantic-release": "^17.3.7",
+    "semantic-release": "^17.3.9",
     "supertest": "^6.1.3"
   },
   "husky": {
@@ -72,10 +76,10 @@
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,css}": [
-      "yarn lint:fix"
+      "yarn test:lint:fix"
     ],
     "*.{md,yml,json}": [
-      "yarn prettier --write"
+      "yarn test:prettier --write"
     ]
   },
   "config": {

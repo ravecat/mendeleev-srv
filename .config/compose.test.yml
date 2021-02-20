@@ -1,0 +1,27 @@
+version: '3.5'
+
+services:
+  mongo:
+    container_name: ${PROJECT:-app}-${RELEASE}-mongo
+    image: mongo:3.6.22-xenial
+    restart: on-failure
+    networks:
+      - internal
+
+  app:
+    command: "yarn test:app"
+    working_dir: /app
+    depends_on:
+      - mongo
+    environment:
+      DB_HOST: ${PROJECT:-app}-${RELEASE}-mongo
+    networks:
+      - internal
+    volumes:
+      - ../:/app
+
+networks:
+  internal:
+    name: ${PROJECT:-app}-${RELEASE}-network
+    driver: bridge
+

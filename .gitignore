@@ -12,8 +12,9 @@ docker-compose.override.yml
 
 # misc
 .DS_Store
-.env.local
-.env.*.local
+
+**/*.local
+**/*.prod
 /data
 
 npm-debug.log*
