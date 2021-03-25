@@ -9,7 +9,6 @@
     "dev:down": "docker-compose -f .config/compose.common.yml -f .config/compose.dev.yml down",
     "dev:app": "./node_modules/.bin/nodemon -w src --exec babel-node src",
     "test": "yarn && RELEASE=test docker-compose -f .config/compose.common.yml -f .config/compose.test.yml up --exit-code-from app",
-    "test:app": "./node_modules/.bin/jest -c .config/jest.config.js --passWithNoTests --forceExit",
     "test:config": "yarn && RELEASE=test docker-compose -f .config/compose.common.yml -f .config/compose.test.yml config",
     "start": "docker-compose -f .config/compose.common.yml -f .config/compose.gateway.yml up -d",
     "start:config": "docker-compose -f .config/compose.common.yml -f .config/compose.gateway.yml config",
@@ -17,8 +16,9 @@
     "test:prettier": "prettier --check *.{md,yml,json}",
     "test:lint": "eslint '**/*.{js,jsx,ts,tsx}'",
     "test:lint:fix": "yarn test:lint --fix",
+    "test:app": "./node_modules/.bin/jest -c .config/jest.config.js --passWithNoTests --forceExit",
     "commit": "./node_modules/cz-customizable/standalone.js",
-    "release": "semantic-release --extends .config/.releaserc.js"
+    "release": "semantic-release --extends ./.config/.releaserc.js"
   },
   "dependencies": {
     "body-parser": "^1.18.3",

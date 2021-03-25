@@ -25,11 +25,13 @@ deploy_branch:
     - docker build --no-cache -t $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA .
     - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
     - docker run --name ${PROJECT}-${RELEASE} -d
-        --restart=always
+        --restart=unless-stopped
         --env DB_HOST
         --add-host host.docker.internal:host-gateway
         --label "traefik.http.routers.${RELEASE}.rule=Host(\"${HOST}\")"
         --label traefik.http.services.${RELEASE}.loadbalancer.server.port=3000
+        --label "traefik.http.middlewares.${RELEASE}.compress=true"
+        --label "traefik.http.routers.${RELEASE}.middlewares=${RELEASE}"
         --network=${DOCKER_GATEWAY_NETWORK}
         ${CI_REGISTRY_IMAGE}:${RELEASE}
   environment:
@@ -57,21 +59,3 @@ destroy_branch_env:
   environment:
     name: $CI_COMMIT_REF_NAME
     action: stop
-
-deploy:
-  stage: deploy
-  image: ${REGISTRY}/${REGISTRY_NAMESPACE}/node:15.7-docker-compose1.27
-  tags:
-    - docker stop ${PROJECT}-${RELEASE}
-    - docker rm ${PROJECT}-${RELEASE}
-
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "master"'
-  before_script:
-    - *docker-login
-  script:
-    - "RELEASE=$(awk -F'\"' '/\"version\": \".+\"/{ print $4; exit; }' package.json)"
-    - docker build --no-cache -t $CI_REGISTRY_IMAGE:$RELEASE .
-    - docker push $CI_REGISTRY_IMAGE:$RELEASE
-    - docker-compose build --no-cache
-    - docker-compose up -d

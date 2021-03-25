@@ -7,8 +7,10 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
     labels:
-      - traefik.http.routers.${RELEASE}.rule=Host(`${HOST:?"SET HOST"}`)
-      - traefik.http.services.${RELEASE}.loadbalancer.server.port=3000
+      - traefik.http.routers.${CI_COMMIT_SHORT_SHA}.rule=Host(`${HOST:?"SET HOST"}`)
+      - traefik.http.services.${CI_COMMIT_SHORT_SHA}.loadbalancer.server.port=3000
+      - traefik.http.middlewares.${CI_COMMIT_SHORT_SHA}.compress=true
+      - traefik.http.routers.${CI_COMMIT_SHORT_SHA}.middlewares=${CI_COMMIT_SHORT_SHA}
 
 networks:
   gateway:
