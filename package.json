@@ -1,7 +1,7 @@
 {
   "name": "mendeleev_api",
   "description": "Mendeleev API",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "scripts": {
     "dev": "yarn && yarn dev:down && docker-compose -f .config/compose.common.yml -f .config/compose.dev.yml up",
