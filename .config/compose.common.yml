@@ -2,7 +2,7 @@ version: '3.5'
 
 services:
   app:
-    container_name: ${PROJECT:-app}-${RELEASE}-app
+    container_name: ${PROJECT:-app}-${RELEASE}
     image: ${IMAGE:-node:15.8-alpine3.13}
     restart: unless-stopped
     environment:

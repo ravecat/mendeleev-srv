@@ -3,21 +3,10 @@ version: '3.5'
 services:
   mongo:
     container_name: ${PROJECT:-app}-${RELEASE}-mongo
-    image: mongo:3.6.22-xenial
-    restart: on-failure
+    image: registry.gitlab.com/rvct/mendeleev/mendeleev:mongo-dump
+    restart: unless-stopped
     networks:
       - internal
-
-  mongo_seed:
-    image: mongo:3.6.22-xenial
-    container_name: ${PROJECT:-app}-${RELEASE}-mongo-seed
-    volumes:
-      - ../:/app
-    command: sh -c "mongorestore --host ${PROJECT:-app}-${RELEASE}-mongo --gzip --archive=/app/mongo/initialData.gz"
-    networks:
-      - internal
-    depends_on:
-      - mongo
       
   app:
     command: "yarn dev:app"

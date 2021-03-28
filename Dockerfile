@@ -8,7 +8,7 @@ RUN yarn install && \
 FROM node:15.8-alpine3.13
 
 WORKDIR /app
-COPY package*.json ./
+COPY package.json ./
 RUN yarn install --production && \
     yarn cache clean
 COPY --from=builder /app/dist ./dist

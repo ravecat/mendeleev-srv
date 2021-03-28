@@ -1,0 +1,6 @@
+FROM mongo:3.6.22-xenial
+COPY dump.gz /
+CMD mongod --fork --logpath /var/log/mongodb.log; \
+    mongorestore --gzip --archive=/dump.gz; \
+    mongod --shutdown; \
+    docker-entrypoint.sh mongod
