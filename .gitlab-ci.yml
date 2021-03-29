@@ -56,13 +56,12 @@ release:
     - docker
   variables:
     GITLAB_TOKEN: $GITLAB_CI_BOT_TOKEN
-    NPM_TOKEN: $NPM_TOKEN
     GIT_AUTHOR_NAME: $GITLAB_CI_BOT_ID
     GIT_AUTHOR_EMAIL: $GITLAB_CI_BOT_EMAIL
     GIT_COMMITTER_NAME: $GITLAB_CI_BOT_ID
     GIT_COMMITTER_EMAIL: $GITLAB_CI_BOT_EMAIL
   rules:
-    - if: '$CI_COMMIT_BRANCH == "master" && $CI_COMMIT_MESSAGE !~ /^build\(release\)/'
+    - if: '$CI_COMMIT_BRANCH == "master" && $CI_COMMIT_MESSAGE !~ /^build\(release\)|ci[\(:]/'
   script:
     - yarn 
     - yarn release
@@ -83,8 +82,7 @@ deploy:
   tags:
     - docker
   rules:
-    - if: '$CI_COMMIT_BRANCH == "master" && $CI_COMMIT_MESSAGE =~ /^build\(release\)/'
-    - if: '$CI_COMMIT_BRANCH == "master" && $CI_COMMIT_MESSAGE =~ /^ci[\(:]/'
+    - if: '$CI_COMMIT_BRANCH == "master" && $CI_COMMIT_MESSAGE =~ /^build\(release\)|ci[\(:]/'
   before_script:
     - *docker-login
   variables:
